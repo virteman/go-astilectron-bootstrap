@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/asticode/go-astilectron"
-	"github.com/asticode/go-astilectron-bundler"
 	"github.com/asticode/go-astilog"
 	"github.com/asticode/go-astitools/ptr"
 	"github.com/pkg/errors"
+	"github.com/virteman/go-astilectron"
+	"github.com/virteman/go-astilectron-bundler"
 )
 
 // Run runs the bootstrap

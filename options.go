@@ -1,7 +1,7 @@
 package bootstrap
 
 import (
-	"github.com/asticode/go-astilectron"
+	"github.com/virteman/go-astilectron"
 )
 
 // Options represents options

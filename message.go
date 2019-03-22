@@ -3,9 +3,9 @@ package bootstrap
 import (
 	"encoding/json"
 
-	"github.com/asticode/go-astilectron"
 	"github.com/asticode/go-astilog"
 	"github.com/pkg/errors"
+	"github.com/virteman/go-astilectron"
 )
 
 // MessageOut represents a message going out
