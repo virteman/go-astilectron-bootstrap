@@ -59,27 +59,9 @@ func Run(o Options) (err error) {
 	// Init windows
 	var w = make([]*astilectron.Window, len(o.Windows))
 	for i, wo := range o.Windows {
-		var url = wo.Homepage
-		if strings.Index(url, "://") == -1 && !strings.HasPrefix(url, string(filepath.Separator)) {
-			url = filepath.Join(absoluteResourcesPath(a, relativeResourcesPath), "app", url)
-		}
-		if w[i], err = a.NewWindow(url, wo.Options); err != nil {
-			return errors.Wrap(err, "new window failed")
-		}
-
-		// Handle messages
-		if wo.MessageHandler != nil {
-			w[i].OnMessage(HandleMessages(w[i], wo.MessageHandler))
-		}
-
-		// Adapt window
-		if wo.Adapter != nil {
-			wo.Adapter(w[i])
-		}
-
-		// Create window
-		if err = w[i].Create(); err != nil {
-			return errors.Wrap(err, "creating window failed")
+		w[i], err = NewWindow(a, wo, relativeResourcesPath)
+		if err != nil {
+			return
 		}
 	}
 
@@ -363,6 +345,46 @@ func restoreResources(a *astilectron.Astilectron, relativeResourcesPath string, 
 			err = errors.Wrap(err, "marshaling checksums failed")
 			return
 		}
+	}
+	return
+}
+
+// create a new window
+func NewWindow(a *astilectron.Astilectron,
+	wo *Window, args ...string) (w *astilectron.Window,
+	err error) {
+	var url = wo.Homepage
+	if strings.Index(url, "://") == -1 &&
+		!strings.HasPrefix(url, string(filepath.Separator)) {
+		var relativeResourcesPath string
+		if len(args) > 0 && len(args[0]) != 0 {
+			relativeResourcesPath = args[0]
+		} else {
+			relativeResourcesPath = "resources"
+		}
+		url = filepath.Join(
+			absoluteResourcesPath(a,
+				relativeResourcesPath), "app", url)
+	}
+	if w, err = a.NewWindow(url, wo.Options); err != nil {
+		err = errors.Wrap(err, "new window failed")
+		return
+	}
+
+	// Handle messages
+	if wo.MessageHandler != nil {
+		w.OnMessage(HandleMessages(w, wo.MessageHandler))
+	}
+
+	// Adapt window
+	if wo.Adapter != nil {
+		wo.Adapter(w)
+	}
+
+	// Create window
+	if err = w.Create(); err != nil {
+		err = errors.Wrap(err, "creating window failed")
+		return
 	}
 	return
 }
