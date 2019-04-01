@@ -350,17 +350,27 @@ func restoreResources(a *astilectron.Astilectron, relativeResourcesPath string, 
 }
 
 // create a new window
+// @param *astilectron.Astilectron
+// @param *Window
+// @param args
+// @param args[0] relativeResourcesPath
+// @param args[1] *astilectron.Window parent astilectron.Window when create window browser view
 func NewWindow(a *astilectron.Astilectron,
-	wo *Window, args ...string) (w *astilectron.Window,
+	wo *Window, args ...interface{}) (w *astilectron.Window,
 	err error) {
 	var url = wo.Homepage
 	if strings.Index(url, "://") == -1 &&
 		!strings.HasPrefix(url, string(filepath.Separator)) {
 		var relativeResourcesPath string
-		if len(args) > 0 && len(args[0]) != 0 {
-			relativeResourcesPath = args[0]
-		} else {
+		for {
+			if len(args) > 0 {
+				if rl, ok := args[0].(string); ok && len(rl) > 0 {
+					relativeResourcesPath = rl
+					break
+				}
+			}
 			relativeResourcesPath = "resources"
+			break
 		}
 		url = filepath.Join(
 			absoluteResourcesPath(a,
@@ -381,10 +391,21 @@ func NewWindow(a *astilectron.Astilectron,
 		wo.Adapter(w)
 	}
 
-	// Create window
-	if err = w.Create(); err != nil {
+	for {
+		if len(args) > 1 {
+			if pw, ok := args[1].(*astilectron.Window); ok {
+				// Create window
+				err = w.CreateBrowserView(pw)
+				break
+			}
+		}
+		// Create window
+		err = w.Create()
+		break
+	}
+
+	if err != nil {
 		err = errors.Wrap(err, "creating window failed")
-		return
 	}
 	return
 }
