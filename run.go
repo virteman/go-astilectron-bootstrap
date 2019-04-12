@@ -394,7 +394,7 @@ func NewWindow(a *astilectron.Astilectron,
 	for {
 		if len(args) > 1 {
 			if pw, ok := args[1].(*astilectron.Window); ok {
-				// Create window
+				// Create browser window
 				err = w.CreateBrowserView(pw)
 				break
 			}
