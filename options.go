@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"github.com/asticode/go-astikit"
 	"github.com/virteman/go-astilectron"
 )
 
@@ -11,7 +12,9 @@ type Options struct {
 	AssetDir           AssetDir
 	AstilectronOptions astilectron.Options
 	Debug              bool
+	Logger             astikit.StdLogger
 	MenuOptions        []*astilectron.MenuItemOptions
+	MenuOptionsFunc    func(*astilectron.Astilectron) []*astilectron.MenuItemOptions
 	OnWait             OnWait
 	ResourcesPath      string
 	RestoreAssets      RestoreAssets
