@@ -363,6 +363,7 @@ func restoreResourcesFunc(l astikit.SeverityLogger, a *astilectron.Astilectron, 
 // @param args
 // @param args[0] relativeResourcesPath
 // @param args[1] *astilectron.Window parent astilectron.Window when create window browser view
+// @param args[2] Logger
 func NewWindow(a *astilectron.Astilectron,
 	wo *Window, args ...interface{}) (w *astilectron.Window,
 	err error) {
@@ -391,7 +392,11 @@ func NewWindow(a *astilectron.Astilectron,
 
 	// Handle messages
 	if wo.MessageHandler != nil {
-		w.OnMessage(HandleMessages(w, wo.MessageHandler))
+		var logger astikit.CompleteLogger
+		if len(args) > 2 {
+			logger, _ = args[2].(astikit.CompleteLogger)
+		}
+		w.OnMessage(handleMessages(w, wo.MessageHandler, logger))
 	}
 
 	// Adapt window
