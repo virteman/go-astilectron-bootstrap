@@ -20,6 +20,9 @@ type MessageIn struct {
 	Payload json.RawMessage `json:"payload,omitempty"`
 }
 
+func HandleMessages(w *astilectron.Window, messageHandler MessageHandler, l astikit.SeverityLogger) astilectron.ListenerMessage {
+	return handleMessages(w, messageHandler, l)
+}
 func handleMessages(w *astilectron.Window, messageHandler MessageHandler, l astikit.SeverityLogger) astilectron.ListenerMessage {
 	return func(m *astilectron.EventMessage) (v interface{}) {
 		// Unmarshal message
