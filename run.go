@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/asticode/go-astikit"
+	"github.com/virteman/go-astikit"
 	"github.com/virteman/go-astilectron"
 	astibundler "github.com/virteman/go-astilectron-bundler"
 )
